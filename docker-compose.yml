@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - tomcat
+      - db
+
+  tomcat:
+    image: tomcat:9-jdk11
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./target:/usr/local/tomcat/webapps/
+    command: ["catalina.sh", "run"]
+
+    db:
+    image: mariadb:10.1
+    environment:
+      MARIADB_ROOT_PASSWORD: passroot
+      MARIADB_USER: user
+      MARIADB_PASSWORD: pass
+      MARIADB_DATABASE: database
+    volumes:
+      - dbdata:/var/lib/mysql  
+    ports:
+      - 3306:3306
+
+volumes:
+  app_target: 
+  dbdata:
+
+
+  
